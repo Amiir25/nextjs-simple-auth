@@ -1,8 +1,10 @@
 "use server";
 
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
+
+// Login
 export default async function login(prevState: { error?: string } | undefined, formData: FormData) {
     // Fake "database"
     const users = [
@@ -21,4 +23,11 @@ export default async function login(prevState: { error?: string } | undefined, f
 
     await createSession({ username: user.username, role: user.role });
     redirect("/dashboard");
+}
+
+
+// Logout
+export async function logout() {
+    await deleteSession();
+    redirect("/login");
 }
