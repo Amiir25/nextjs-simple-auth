@@ -3,11 +3,6 @@ Imagine you enter a music festival:
 - SignJWT = the staff member who stamps a wristband for you at the entrance, using a special tamper-proof stamp only they have.
 - jwtVerify = the security guard at each stage who checks your wristband is real and hasn’t expired.
 - cookies = your wrist. It’s where the band is kept so you carry it everywhere without re-showing your ticket.
-
-.setProtectedHeader({ alg: "HS256" })
-.setIssuedAt()
-.setExpirationTime("7d")
-.sign(key);
 */
 
 import { jwtVerify, SignJWT } from "jose";
@@ -62,4 +57,11 @@ export async function createSession(payload: SessionPayload) {
 export async function getSession() {
     const cookieStore = await cookies();
     return verifyToken(cookieStore.get("session")?.value);
+}
+
+
+// Delete session for logout
+export async function deleteSession() {
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
 }
