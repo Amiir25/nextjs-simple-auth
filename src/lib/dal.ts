@@ -22,3 +22,10 @@ export async function getMySecrets() {
     const session = await requireSession();
     return secrets.filter((s) => s.owner === session.username);
 }
+
+
+// Protect a Server Action too
+export async function addSecret(text: string) {
+    const session = await requireSession();     // check first, always
+    secrets.push({ id: secrets.length = 1, owner: session.username, text });
+}
