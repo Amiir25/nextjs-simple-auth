@@ -1,13 +1,21 @@
-import { getMySecrets } from "@/lib/dal";
-import { getSession } from "@/lib/session";
+import { getMySecrets, requireSession } from "@/lib/dal";
+import Link from "next/link";
 import { Suspense } from "react";
+import { logout } from "../login/actions";
 
 async function UserInfo() {
-  const session = await getSession();
-  
+  const session = await requireSession();
   return (
-    <p>Username: {session ? `${session.username} (${session.role})` : "unknown"}</p>    
-  )
+    <div>
+      <p>
+        Username:{" "}
+        {session ? `${session.username} (${session.role})` : "unknown"}
+      </p>
+      {session.role === "admin" && (
+        <Link href={"/admin"}>Go to admin panel</Link>
+      )}
+    </div>
+  );
 }
 
 async function Secret() {
@@ -18,18 +26,21 @@ async function Secret() {
         <li key={s.id}>{s.text}</li>
       ))}
     </ul>
-  )
+  );
 }
 
 export default function DashboardPage() {
-
   return (
     <div>
       <h1>Dashboard</h1>
       <Suspense fallback={<p>Loading Session...</p>}>
-        <UserInfo/>
-        <Secret/>
+        <UserInfo />
+        <Secret />
       </Suspense>
+
+      <form action={logout}>
+        <button>Log out</button>
+      </form>
     </div>
   );
 }
