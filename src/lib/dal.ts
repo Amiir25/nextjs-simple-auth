@@ -29,3 +29,17 @@ export async function addSecret(text: string) {
     const session = await requireSession();     // check first, always
     secrets.push({ id: secrets.length = 1, owner: session.username, text });
 }
+
+
+// Admin Check
+export const requireAdmin = cache(async () => {
+    const session = await requireSession();
+    if (session.role !== "admin") redirect("/dashboard");
+    return session;
+})
+
+// Admin-only data
+export async function getAllSecrets() {
+    await requireAdmin();
+    return secrets;
+}
