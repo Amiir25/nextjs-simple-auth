@@ -23,6 +23,11 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
+    // Logged in, but not an admin, trying to reach /admin
+    if (pathname.startsWith("/admin") && session && session.role !== "admin") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
     return NextResponse.next();  //let them through
 }
 
